@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meow QnA</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background-color: #fff8f0;
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      flex-direction: column;
+      text-align: center;
+      overflow: hidden;
+    }
+    #cat {
+      font-size: 60px;
+    }
+    .question-box {
+      max-width: 600px;
+      padding: 20px;
+      border: 2px dashed #aaa;
+      border-radius: 10px;
+      background-color: #fff;
+    }
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 18px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      background-color: #ffd6d6;
+    }
+    #fireworks {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 100vw;
+      background-color: black;
+      z-index: 999;
+      overflow: hidden;
+      color: white;
+    }
+    .cat-love {
+      font-size: 30px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div id="cat">🐱</div>
+    <div class="question-box">
+      <p id="question">Hello, this is Meow 🐾<br>Do you love your mister?</p>
+      <div>
+        <button onclick="answer('yes')">Yes</button>
+        <button onclick="answer('no')">No</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="fireworks">
+    <canvas id="canvas"></canvas>
+    <div class="cat-love">🐱 is holding a sign:<br><strong>I love you bubba ❤️❤️❤️</strong></div>
+  </div>
+
+  <script>
+    const questions = [
+      "Do you love your mister?",
+      "Do you miss your mister?",
+      "Mister wants to tell you that he loves you a lot and is sorry for hurting you a lot. He wants to make it up to you and be with you along with your and his entire family the way you want. Sooo would you give your mister a chance?"
+    ];
+
+    let current = 0;
+    let beggingLevel = 0;
+
+    function answer(ans) {
+      if (current < 2) {
+        if (ans === 'yes') {
+          current++;
+          document.getElementById('question').innerHTML = questions[current] || '';
+          if (current === 2) {
+            beggingLevel = 0;
+          }
+        } else {
+          document.getElementById('question').innerHTML = `Wrong answer 😾<br>${questions[current]}`;
+        }
+      } else {
+        if (ans === 'yes') {
+          showFireworks();
+        } else {
+          begMore();
+        }
+      }
+    }
+
+    function begMore() {
+      const pleas = [
+        "Pleasee", "Pretty please", "Please accept kr ki g bubba",
+        "Kr ki g baiko", "Kasa rahu tuzha shivay", "Bubba pleaseeeee"
+      ];
+      if (beggingLevel < pleas.length) {
+        document.getElementById('question').innerHTML = pleas[beggingLevel] + '?';
+        beggingLevel++;
+      } else {
+        const eCount = 6 + beggingLevel * 2;
+        document.getElementById('question').innerHTML = `Bubba please${'e'.repeat(eCount)}?`;
+        beggingLevel++;
+      }
+    }
+
+    function showFireworks() {
+      document.getElementById('app').style.display = 'none';
+      document.getElementById('fireworks').style.display = 'flex';
+      startFireworks();
+    }
+
+    // Simple fireworks animation
+    function startFireworks() {
+      const canvas = document.getElementById('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const colors = ['red', 'green', 'blue', 'purple', 'yellow', 'cyan', 'magenta', 'orange', 'white'];
+
+      function drawFirework(x, y, color) {
+        for (let i = 0; i < 20; i++) {
+          const angle = Math.random() * 2 * Math.PI;
+          const radius = Math.random() * 80;
+          const fx = x + radius * Math.cos(angle);
+          const fy = y + radius * Math.sin(angle);
+          ctx.beginPath();
+          ctx.strokeStyle = color;
+          ctx.moveTo(x, y);
+          ctx.lineTo(fx, fy);
+          ctx.stroke();
+        }
+      }
+
+      let count = 0;
+      const interval = setInterval(() => {
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height / 2;
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        drawFirework(x, y, color);
+        count++;
+        if (count > 9) clearInterval(interval);
+      }, 400);
+    }
+  </script>
+</body>
+</html>
